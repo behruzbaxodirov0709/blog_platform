@@ -1,0 +1,7 @@
+{% for post in posts %}
+    <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a><br>
+    {{ post.author }}<br>
+    {{ post.content }}<br>
+    ======================
+    <br>
+{% endfor %}
