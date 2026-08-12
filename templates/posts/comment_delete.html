@@ -1,0 +1,9 @@
+<form method="post">
+    {% csrf_token %}
+    <h4>Rostdan ham "{{ comment.content }}" commentini o‘chirmoqchimisiz?</h4>
+    <br>
+    <button>O‘chirish</button><br>
+    <a href="{% url 'post_detail' comment.post.pk %}">
+        Bekor qilish
+    </a>
+</form>

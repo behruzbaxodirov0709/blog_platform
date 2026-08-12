@@ -27,7 +27,23 @@
         {{ comment.content }}<br>
         {{ comment.created_at }}
     </p>
+
+    {% if comment.author == request.user %}
+    <a href="{% url 'comment_update' comment.pk %}">
+        Edit
+    </a>
+
+    <br>
+
+    <a href="{% url 'comment_delete' comment.pk %}">
+        Delete
+    </a>
+    {% endif %}
+    
     <hr>
+    
 {% empty %}
     <p>Hali commentlar yo‘q.</p>
 {% endfor %}
+
+

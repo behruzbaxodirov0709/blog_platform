@@ -1,0 +1,16 @@
+<h3>Commentni tahrirlash</h3>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <br>
+
+    <button type="submit">Saqlash</button>
+</form>
+
+<br>
+
+<a href="{% url 'post_detail' comment.post.pk %}">
+    Bekor qilish
+</a>
