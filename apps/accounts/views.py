@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, ProfileUpdateForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django import forms
 
 
 
@@ -75,7 +74,62 @@ class LogoutView(View):
         return redirect("login")
 
 
+class ProfileView(View):
+    def get(self, request):
+        return render(
+            request=request,
+            template_name="accounts/profile.html",
+            context={"user":request.user}
+        )
 
-            
-            
+
+class ProfileUpdateView(View):
+    def get(self, request):
+        form = ProfileUpdateForm(data=None, instance=request.user)
+        return render(
+            request=request,
+            template_name="accounts/profile_update.html",
+            context={"form":form}
+        )
+
+    def post(self, request):
+        form = ProfileUpdateForm(data=request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+
+        return render(
+                    request=request,
+                    template_name="accounts/profile_update.html",
+                    context={"form":form}
+                )
+
+
+class PasswordChangeView(View):
+    def get(self, request):
+        form = PasswordChangeForm(data=None, user=request.user)
+        return render(
+            request=request,
+            template_name="accounts/password_change.html",
+            context={"form":form}
+        )
+
+    def post(self, request):
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            new_password = form.cleaned_data.get("new_password")
+            request.user.set_password(new_password)
+            request.user.save()
+            return redirect("login")
+
+        return render(
+                    request=request,
+                    template_name="accounts/password_change.html",
+                    context={"form":form}
+                )
+
+
+
+
+        
 
