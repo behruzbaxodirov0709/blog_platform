@@ -11,3 +11,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)

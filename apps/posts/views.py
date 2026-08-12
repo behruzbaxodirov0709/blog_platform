@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Post
+from .models import Post, Comment
 from . import forms
 
 
@@ -17,12 +17,34 @@ class PostListView(View):
 
 class PostDetailView(View):
     def get(self, request, pk):
+        form = forms.CommentForm(data=None)
         post = Post.objects.get(pk=pk)
+        comments = Comment.objects.filter(post=post)
         return render(
             request=request,
             template_name="posts/post_detail.html",
-            context={"post": post}
+            context={
+                "post": post, 
+                "form":form, 
+                "comments":comments
+                }
         )
+
+    def post(self, request, pk):
+        form = forms.CommentForm(data=request.POST)
+        post = Post.objects.get(pk=pk)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            return redirect("post_detail", post.pk)
+
+        return render(
+                    request=request,
+                    template_name="posts/post_detail.html",
+                    context={"post": post, "form":form}
+                )
 
 
 class PostCreateView(View):
