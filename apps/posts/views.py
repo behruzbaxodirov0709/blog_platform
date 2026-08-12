@@ -2,12 +2,17 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Post, Comment
 from . import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Q
 
 
 
 class PostListView(View):
     def get(self, request):
-        posts = Post.objects.all()
+        query = request.GET.get("q")
+        posts = Post.objects.annotate(comments_count = Count("comments"))
+        if query:
+            posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
         return render(
             request=request,
             template_name="posts/post_list.html",
@@ -20,6 +25,8 @@ class PostDetailView(View):
         form = forms.CommentForm(data=None)
         post = Post.objects.get(pk=pk)
         comments = Comment.objects.filter(post=post)
+        post.views_count += 1
+        post.save()
         return render(
             request=request,
             template_name="posts/post_detail.html",
@@ -31,6 +38,9 @@ class PostDetailView(View):
         )
 
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return redirect("login")
+        
         form = forms.CommentForm(data=request.POST)
         post = Post.objects.get(pk=pk)
         if form.is_valid():
@@ -47,7 +57,7 @@ class PostDetailView(View):
                 )
 
 
-class PostCreateView(View):
+class PostCreateView(LoginRequiredMixin, View):
     def get(self, request):
         form = forms.PostCreateForm(data=None)
         return render(

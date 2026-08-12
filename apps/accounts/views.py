@@ -3,6 +3,7 @@ from django.views import View
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
@@ -74,7 +75,7 @@ class LogoutView(View):
         return redirect("login")
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         return render(
             request=request,
@@ -83,7 +84,7 @@ class ProfileView(View):
         )
 
 
-class ProfileUpdateView(View):
+class ProfileUpdateView(LoginRequiredMixin, View):
     def get(self, request):
         form = ProfileUpdateForm(data=None, instance=request.user)
         return render(
@@ -105,7 +106,7 @@ class ProfileUpdateView(View):
                 )
 
 
-class PasswordChangeView(View):
+class PasswordChangeView(LoginRequiredMixin, View):
     def get(self, request):
         form = PasswordChangeForm(data=None, user=request.user)
         return render(

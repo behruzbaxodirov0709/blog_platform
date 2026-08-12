@@ -1,7 +1,16 @@
+
+<form method="get">
+    <input type="text" name="q" placeholder="Post qidirish...">
+    <button>Qidirish</button>
+</form>
+
+
 {% for post in posts %}
-    <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a><br>
-    {{ post.author }}<br>
-    {{ post.content }}<br>
+    <h4>Sarlavha: <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
+    <h4>Yozuvchi: <i>{{ post.author }}</i></h4>
+    <h4>Izoh: {{ post.content }}</h4>
+    <h4>Ko'rishlar soni: {{ post.views_count }} ta</h4>
+    <h4>Commentlar soni: {{ post.comments_count }} ta</h4><br>
     ======================
     <br>
 {% endfor %}
