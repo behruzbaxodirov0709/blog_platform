@@ -14,3 +14,37 @@
     ======================
     <br>
 {% endfor %}
+
+
+{% if posts.has_previous %}
+    {% if query %}
+        <a href="?q={{ query }}&page={{ posts.previous_page_number }}">Previous</a>
+    {% else %}
+        <a href="?page={{ posts.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+{% endif %}
+
+
+{% for page_number in posts.paginator.page_range %}
+    {% if page_number == posts.number %}
+        {{ page_number }}
+    {% else %}
+        {% if query %}
+            <a href="?q={{ query }}&page={{ page_number }}">{{ page_number }}</a>
+        {% else %}
+            <a href="?page={{ page_number }}">{{ page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+{% endfor %}
+
+
+{% if posts.has_next %}
+    {% if query %}
+        <a href="?q={{ query }}&page={{ posts.next_page_number }}">Next</a>
+    {% else %}
+        <a href="?page={{ posts.next_page_number }}">Next</a>
+    {% endif %}
+
+{% endif %}

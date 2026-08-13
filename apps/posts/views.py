@@ -4,7 +4,7 @@ from .models import Post, Comment
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
-
+from django.core.paginator import Paginator
 
 
 class PostListView(View):
@@ -13,10 +13,13 @@ class PostListView(View):
         posts = Post.objects.annotate(comments_count = Count("comments"))
         if query:
             posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
+        paginator = Paginator(object_list=posts, per_page=1)
+        page_number = request.GET.get("page")
+        posts = paginator.get_page(page_number)
         return render(
             request=request,
             template_name="posts/post_list.html",
-            context={"posts":posts}
+            context={"posts":posts, "query":query}
         )
 
 
