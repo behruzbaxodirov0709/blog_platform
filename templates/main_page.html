@@ -1,8 +1,18 @@
-<h1>Welcome to main page</h1>
+{% extends "base.html" %}
 
+{% block title %}Bosh sahifa · DevBlog{% endblock %}
 
-<br><br><br>
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button>Logout</button>
-</form>
+{% block content %}
+<section class="card detail-card">
+    <div class="eyebrow">DevBlog</div>
+    <h1>Salom, {{ request.user.first_name|default:request.user.username }}! 👋</h1>
+    <p class="muted">
+        Blog platformasiga xush kelibsiz. Postlarni o‘qing, o‘z fikringizni yozing va boshqalar bilan ulashing.
+    </p>
+
+    <div class="form-actions">
+        <a class="btn" href="{% url 'post_list' %}">📝 Postlarni ko‘rish</a>
+        <a class="btn btn-secondary" href="{% url 'post_create' %}">+ Yangi post</a>
+    </div>
+</section>
+{% endblock %}

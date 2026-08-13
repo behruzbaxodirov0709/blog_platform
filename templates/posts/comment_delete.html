@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-    Commentni o‘chirish
-{% endblock %}
-
+{% block title %}Commentni o‘chirish · DevBlog{% endblock %}
 
 {% block content %}
+<div class="card danger-box">
+    <div class="eyebrow">Tasdiqlash</div>
+    <h1>Commentni o‘chirish</h1>
+    <p>
+        Rostdan ham bu commentni o‘chirmoqchimisiz?
+    </p>
+    <div class="card" style="padding:16px; margin:18px 0; color:#cbd5e1;">
+        {{ comment.content }}
+    </div>
 
     <form method="post">
         {% csrf_token %}
-        <h4>Rostdan ham "{{ comment.content }}" commentini o‘chirmoqchimisiz?</h4>
-        <br>
-        <button>O‘chirish</button><br>
-        <a href="{% url 'post_detail' comment.post.pk %}">
-            Bekor qilish
-        </a>
+        <div class="form-actions">
+            <button class="btn-danger" type="submit">🗑 Ha, o‘chirish</button>
+            <a class="btn btn-secondary" href="{% url 'post_detail' comment.post.pk %}">Bekor qilish</a>
+        </div>
     </form>
-
+</div>
 {% endblock %}

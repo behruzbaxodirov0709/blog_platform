@@ -1,25 +1,20 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-    Profilni o‘zgartirish
-{% endblock %}
-
-
+{% block title %}Profilni o‘zgartirish · DevBlog{% endblock %}
 
 {% block content %}
-
-    <h2>Profilni o‘zgartirish</h2>
+<div class="card form-card">
+    <div class="eyebrow">Account</div>
+    <h1>Profilni o‘zgartirish</h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <br>
-        <button>Saqlash</button>
-    </form>
-    <br>
-    <a href="{% url 'profile' %}">
-        Bekor qilish
-    </a>
 
+        <div class="form-actions">
+            <button type="submit">💾 Saqlash</button>
+            <a class="btn btn-secondary" href="{% url 'profile' %}">Bekor qilish</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

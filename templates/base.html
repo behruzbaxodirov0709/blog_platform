@@ -2,40 +2,487 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Blog{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DevBlog{% endblock %}</title>
+
+    <style>
+        :root {
+            --bg: #0b1120;
+            --surface: #111827;
+            --surface-2: #172033;
+            --border: #263247;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(99,102,241,.16), transparent 30rem),
+                radial-gradient(circle at bottom right, rgba(14,165,233,.10), transparent 28rem),
+                var(--bg);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .container {
+            width: min(1100px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid rgba(148,163,184,.12);
+            background: rgba(11,17,32,.86);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-inner {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -.04em;
+        }
+
+        .brand span { color: #818cf8; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 9px 13px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: .92rem;
+            transition: .18s ease;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(148,163,184,.10);
+            transform: translateY(-1px);
+        }
+
+        .nav-user {
+            color: #a5b4fc;
+            font-size: .9rem;
+            font-weight: 600;
+            padding: 0 7px;
+        }
+
+        .main {
+            min-height: calc(100vh - 145px);
+            padding: 42px 0 64px;
+        }
+
+        .hero {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: #818cf8;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            font-size: .76rem;
+            font-weight: 800;
+        }
+
+        h1, h2, h3, h4 { line-height: 1.2; }
+        h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 8px 0 10px; }
+        h2 { font-size: 1.65rem; margin: 0 0 18px; }
+        h3 { font-size: 1.2rem; }
+
+        .muted { color: var(--muted); }
+
+        .card {
+            background: rgba(17,24,39,.78);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 18px 50px rgba(0,0,0,.18);
+        }
+
+        .post-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .post-card {
+            padding: 24px;
+            transition: .2s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(129,140,248,.45);
+            box-shadow: 0 20px 55px rgba(0,0,0,.25);
+        }
+
+        .post-title {
+            margin: 0 0 9px;
+            font-size: 1.35rem;
+            font-weight: 750;
+        }
+
+        .post-title a:hover { color: #a5b4fc; }
+
+        .post-excerpt {
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 14px 0 20px;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            color: var(--muted);
+            font-size: .86rem;
+        }
+
+        .pill {
+            padding: 5px 9px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(148,163,184,.05);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin: 0 0 24px;
+        }
+
+        .search-bar input { flex: 1; }
+
+        input, textarea, select {
+            width: 100%;
+            border: 1px solid #334155;
+            border-radius: 11px;
+            outline: none;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 11px 13px;
+            font: inherit;
+            transition: .18s ease;
+        }
+
+        textarea { min-height: 150px; resize: vertical; }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+        }
+
+        button, .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            border: 0;
+            border-radius: 11px;
+            padding: 10px 15px;
+            color: white;
+            background: var(--primary);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .18s ease;
+        }
+
+        button:hover, .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+        }
+
+        .btn-secondary:hover { background: #334155; }
+
+        .btn-danger {
+            background: #b91c1c;
+        }
+
+        .btn-danger:hover { background: var(--danger); }
+
+        .btn-ghost {
+            background: transparent;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+
+        .btn-ghost:hover { background: #1e293b; }
+
+        .form-card {
+            width: min(680px, 100%);
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        .form-card form p {
+            margin: 0 0 16px;
+        }
+
+        .form-card label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            font-size: .92rem;
+            font-weight: 650;
+        }
+
+        .helptext, .form-card ul.helptext {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+        .errorlist {
+            margin: 6px 0 8px;
+            padding: 0;
+            list-style: none;
+            color: #fca5a5;
+            font-size: .86rem;
+        }
+
+        .form-card .errorlist.nonfield {
+            padding: 11px 13px;
+            border: 1px solid rgba(239,68,68,.35);
+            border-radius: 10px;
+            background: rgba(239,68,68,.08);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .detail-card { padding: 30px; }
+
+        .detail-content {
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 1.03rem;
+            margin: 24px 0;
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .section {
+            margin-top: 28px;
+        }
+
+        .comment {
+            padding: 17px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment:last-child { border-bottom: 0; }
+
+        .comment-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .comment-author { font-weight: 750; }
+        .comment-date { color: var(--muted); font-size: .8rem; }
+        .comment-body { color: #cbd5e1; white-space: pre-wrap; margin: 8px 0; }
+
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            align-items: center;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 28px;
+        }
+
+        .page {
+            min-width: 40px;
+            height: 40px;
+            padding: 0 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #cbd5e1;
+            background: rgba(17,24,39,.65);
+            transition: .18s ease;
+        }
+
+        .page:hover {
+            color: white;
+            border-color: #6366f1;
+            background: rgba(99,102,241,.12);
+        }
+
+        .page.active {
+            color: white;
+            border-color: #6366f1;
+            background: #4f46e5;
+            font-weight: 800;
+        }
+
+        .empty {
+            padding: 42px 24px;
+            text-align: center;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 22px;
+        }
+
+        .profile-avatar {
+            min-height: 220px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #4338ca, #7c3aed);
+            font-size: 4rem;
+            font-weight: 850;
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 14px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-label { color: var(--muted); }
+        .info-value { color: #f1f5f9; word-break: break-word; }
+
+        .danger-box {
+            padding: 25px;
+            border: 1px solid rgba(239,68,68,.35);
+            background: rgba(127,29,29,.12);
+        }
+
+        .footer {
+            border-top: 1px solid rgba(148,163,184,.12);
+            color: #64748b;
+            padding: 24px 0;
+            text-align: center;
+            font-size: .85rem;
+        }
+
+        .logout-form { display: inline; }
+
+        @media (max-width: 760px) {
+            .nav-inner {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 14px 0;
+            }
+
+            .nav-links { justify-content: flex-start; }
+            .main { padding-top: 28px; }
+            .profile-grid { grid-template-columns: 1fr; }
+            .profile-avatar { min-height: 150px; }
+            .info-row { grid-template-columns: 1fr; gap: 3px; }
+            .search-bar { flex-direction: column; }
+            .detail-card, .form-card, .post-card { padding: 20px; }
+        }
+    </style>
 </head>
 
 <body>
+    <header class="navbar">
+        <div class="container nav-inner">
+            <a class="brand" href="{% url 'post_list' %}">
+                Dev<span>Blog</span>
+            </a>
 
-    <nav>
-        <a href="{% url 'post_list' %}">Posts</a>
+            <nav class="nav-links" aria-label="Asosiy navigatsiya">
+                <a class="nav-link" href="{% url 'post_list' %}">Posts</a>
 
-        {% if request.user.is_authenticated %}
+                {% if request.user.is_authenticated %}
+                    <span class="nav-user">Salom, {{ request.user.username }}!</span>
 
-            <br>
-            <div>
-                Salom, {{ request.user.username }}!
-            </div><br>
+                    <a class="nav-link" href="{% url 'post_create' %}">+ Post</a>
+                    <a class="nav-link" href="{% url 'profile' %}">Profil</a>
 
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-ghost" type="submit">Chiqish</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Kirish</a>
+                    <a class="btn" href="{% url 'registration' %}">Ro‘yxatdan o‘tish</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-            <a href="{% url 'profile' %}">Profile</a><br>
-            <a href="{% url 'post_create' %}">Post yaratish</a>
-            <br>
+    <main class="container main">
+        {% block content %}{% endblock %}
+    </main>
 
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a><br>
-            <a href="{% url 'register' %}">Register</a>
-        {% endif %}
-    </nav>
-
-    <hr>
-
-    {% block content %}
-    {% endblock %}
-
+    <footer class="footer">
+    <div class="container">
+        Made by
+        <a href="https://t.me/behruzbaxodirov"
+           target="_blank"
+           rel="noopener noreferrer"
+           style="color: #818cf8; font-weight: 700;">
+            Baxodirov Behruz
+        </a>
+        · © 2026 DevBlog
+    </div>
+</footer>
 </body>
 </html>

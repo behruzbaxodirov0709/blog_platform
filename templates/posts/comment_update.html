@@ -1,28 +1,20 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-    Commentni tahrirlash
-{% endblock %}
-
+{% block title %}Commentni tahrirlash · DevBlog{% endblock %}
 
 {% block content %}
-
-    <h3>Commentni tahrirlash</h3>
+<div class="card form-card">
+    <div class="eyebrow">Comment</div>
+    <h1>Commentni tahrirlash</h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
 
-        <br>
-
-        <button type="submit">Saqlash</button>
+        <div class="form-actions">
+            <button type="submit">💾 Saqlash</button>
+            <a class="btn btn-secondary" href="{% url 'post_detail' comment.post.pk %}">Bekor qilish</a>
+        </div>
     </form>
-
-    <br>
-
-    <a href="{% url 'post_detail' comment.post.pk %}">
-        Bekor qilish
-    </a>
-
+</div>
 {% endblock %}

@@ -1,59 +1,77 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Posts
-{% endblock %}
+{% block title %}Postlar{% endblock %}
 
 {% block content %}
-        
-    <form method="get">
-        <input type="text" name="q" placeholder="Post qidirish...">
-        <button>Qidirish</button>
-    </form>
+<section class="hero">
+    <div class="eyebrow">DevBlog</div>
+    <h1>So‘nggi postlar</h1>
+    <p class="muted">Dasturlash, Django va IT haqida foydali yozuvlar.</p>
+</section>
 
+<form class="search-bar" method="get">
+    <input type="search" name="q" value="{{ query|default:'' }}" placeholder="Post qidirish..." aria-label="Post qidirish">
+    <button type="submit">🔎 Qidirish</button>
+</form>
 
+{% if posts %}
+<div class="post-grid">
     {% for post in posts %}
-        <h4>Sarlavha: <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
-        <h4>Yozuvchi: <i>{{ post.author }}</i></h4>
-        <h4>Izoh: {{ post.content }}</h4>
-        <h4>Ko'rishlar soni: {{ post.views_count }} ta</h4>
-        <h4>Commentlar soni: {{ post.comments_count }} ta</h4><br>
-        ======================
-        <br>
+        <article class="card post-card">
+            <h2 class="post-title">
+                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+            </h2>
+
+            <div class="meta">
+                <span class="pill">👤 {{ post.author }}</span>
+                <span class="pill">👁 {{ post.views_count }}</span>
+                <span class="pill">💬 {{ post.comments_count }}</span>
+                <span class="pill">🕒 {{ post.created_at }}</span>
+            </div>
+
+            <p class="post-excerpt">{{ post.content|truncatechars:240 }}</p>
+
+            <a class="btn btn-secondary" href="{% url 'post_detail' post.pk %}">
+                Batafsil →
+            </a>
+        </article>
     {% endfor %}
+</div>
 
-
+<div class="pagination">
     {% if posts.has_previous %}
         {% if query %}
-            <a href="?q={{ query }}&page={{ posts.previous_page_number }}">Previous</a>
+            <a class="page" href="?q={{ query }}&page={{ posts.previous_page_number }}">← Oldingi</a>
         {% else %}
-            <a href="?page={{ posts.previous_page_number }}">Previous</a>
+            <a class="page" href="?page={{ posts.previous_page_number }}">← Oldingi</a>
         {% endif %}
-        
     {% endif %}
-
 
     {% for page_number in posts.paginator.page_range %}
         {% if page_number == posts.number %}
-            {{ page_number }}
+            <span class="page active">{{ page_number }}</span>
         {% else %}
             {% if query %}
-                <a href="?q={{ query }}&page={{ page_number }}">{{ page_number }}</a>
+                <a class="page" href="?q={{ query }}&page={{ page_number }}">{{ page_number }}</a>
             {% else %}
-                <a href="?page={{ page_number }}">{{ page_number }}</a>
+                <a class="page" href="?page={{ page_number }}">{{ page_number }}</a>
             {% endif %}
         {% endif %}
-
     {% endfor %}
-
 
     {% if posts.has_next %}
         {% if query %}
-            <a href="?q={{ query }}&page={{ posts.next_page_number }}">Next</a>
+            <a class="page" href="?q={{ query }}&page={{ posts.next_page_number }}">Keyingi →</a>
         {% else %}
-            <a href="?page={{ posts.next_page_number }}">Next</a>
+            <a class="page" href="?page={{ posts.next_page_number }}">Keyingi →</a>
         {% endif %}
-
     {% endif %}
-
+</div>
+{% else %}
+    <div class="card empty">
+        <h2>Post topilmadi</h2>
+        <p class="muted">Qidiruv so‘rovingiz bo‘yicha hech qanday post topilmadi.</p>
+        <a class="btn" href="{% url 'post_list' %}">Barcha postlar</a>
+    </div>
+{% endif %}
 {% endblock %}

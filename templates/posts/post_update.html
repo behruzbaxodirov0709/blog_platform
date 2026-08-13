@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-    Postni o‘zgartirish
-{% endblock %}
-
+{% block title %}Postni o‘zgartirish · DevBlog{% endblock %}
 
 {% block content %}
+<div class="card form-card">
+    <div class="eyebrow">Tahrirlash</div>
+    <h1>Postni o‘zgartirish</h1>
+    <p class="muted">Post ma’lumotlarini yangilang.</p>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <br><br>
-        <button>Postni yangilash</button>
-    </form>
 
+        <div class="form-actions">
+            <button type="submit">💾 Saqlash</button>
+            <a class="btn btn-secondary" href="{% url 'post_list' %}">Bekor qilish</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

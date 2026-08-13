@@ -1,73 +1,69 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-    {{ post.title }}
-{% endblock %}
-
+{% block title %}{{ post.title }} · DevBlog{% endblock %}
 
 {% block content %}
+<article class="card detail-card">
+    <div class="eyebrow">Post</div>
+    <h1>{{ post.title }}</h1>
 
-    <h4>
-        Title: {{ post.title }}<br>
-        Author: {{ post.author }}<br>
-        Content: {{ post.content }}<br>
-        Created at: {{ post.created_at }}<br>
-        Updated at: {{ post.updated_at }}<br>
-        Ko'rishlar soni: {{ post.views_count }} ta
-    </h4>
+    <div class="detail-meta">
+        <span class="pill">👤 {{ post.author }}</span>
+        <span class="pill">👁 {{ post.views_count }} ko‘rish</span>
+        <span class="pill">💬 {{ comments|length }} comment</span>
+        <span class="pill">🕒 {{ post.created_at }}</span>
+    </div>
 
+    <div class="detail-content">{{ post.content }}</div>
 
     {% if post.author == request.user %}
-    <a href="{% url 'post_update' post.pk %}">
-        Postni o‘zgartirish
-    </a>
-    <br>
-    <a href="{% url 'post_delete' post.pk %}">
-        Postni o‘chirish
-    </a>
+        <div class="action-row">
+            <a class="btn" href="{% url 'post_update' post.pk %}">✏️ O‘zgartirish</a>
+            <a class="btn btn-danger" href="{% url 'post_delete' post.pk %}">🗑 O‘chirish</a>
+        </div>
     {% endif %}
+</article>
 
-
-    <hr>
-
-    <h3>Comment yozish</h3>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        <button type="submit">Comment yozish</button>
-    </form>
-
-    <hr>
-
-    <h3>Comments</h3>
+<section class="card detail-card section">
+    <h2>💬 Commentlar</h2>
 
     {% for comment in comments %}
-        <p>
-            <strong>{{ comment.author }}</strong><br>
-            {{ comment.content }}<br>
-            {{ comment.created_at }}
-        </p>
+        <div class="comment">
+            <div class="comment-head">
+                <span class="comment-author">{{ comment.author }}</span>
+                <span class="comment-date">{{ comment.created_at }}</span>
+            </div>
 
-        {% if comment.author == request.user %}
-        <a href="{% url 'comment_update' comment.pk %}">
-            Edit
-        </a>
+            <div class="comment-body">{{ comment.content }}</div>
 
-        <br>
-
-        <a href="{% url 'comment_delete' comment.pk %}">
-            Delete
-        </a>
-        {% endif %}
-        
-        <hr>
-        
+            {% if comment.author == request.user %}
+                <div class="action-row">
+                    <a class="btn btn-secondary" href="{% url 'comment_update' comment.pk %}">✏️ Edit</a>
+                    <a class="btn btn-danger" href="{% url 'comment_delete' comment.pk %}">🗑 Delete</a>
+                </div>
+            {% endif %}
+        </div>
     {% empty %}
-        <p>Hali commentlar yo‘q.</p>
+        <p class="muted">Hali commentlar yo‘q.</p>
     {% endfor %}
+</section>
 
+<section class="card detail-card section">
+    {% if request.user.is_authenticated %}
+        <h2>Comment yozish</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="form-actions">
+                <button type="submit">💬 Comment yuborish</button>
+            </div>
+        </form>
+    {% else %}
+        <h2>Comment yozmoqchimisiz?</h2>
+        <p class="muted">Comment yozish uchun avval akkauntingizga kiring.</p>
+        <a class="btn" href="{% url 'login' %}">Kirish</a>
+    {% endif %}
+</section>
 {% endblock %}
-

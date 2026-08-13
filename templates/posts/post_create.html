@@ -1,18 +1,21 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-
-{% block title %}
-    Post yaratish
-{% endblock %}
-
+{% block title %}Post yaratish · DevBlog{% endblock %}
 
 {% block content %}
+<div class="card form-card">
+    <div class="eyebrow">Yangi post</div>
+    <h1>Post yaratish</h1>
+    <p class="muted">Fikringizni boshqalar bilan ulashing.</p>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <br><br>
-        <button>Post yaratish</button>
-    </form>
 
+        <div class="form-actions">
+            <button type="submit">🚀 Post yaratish</button>
+            <a class="btn btn-secondary" href="{% url 'post_list' %}">Bekor qilish</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

@@ -1,6 +1,21 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <br><br>
-    <button>Kirish</button>
-</form>
+{% extends "base.html" %}
+
+{% block title %}Kirish · DevBlog{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <div class="eyebrow">Welcome back</div>
+    <h1>Akkauntga kirish</h1>
+    <p class="muted">Davom etish uchun ma’lumotlaringizni kiriting.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="form-actions">
+            <button type="submit">🔐 Kirish</button>
+            <a class="btn btn-secondary" href="{% url 'registration' %}">Ro‘yxatdan o‘tish</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,24 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Postni o‘chirish
-{% endblock %}
+{% block title %}Postni o‘chirish · DevBlog{% endblock %}
 
 {% block content %}
-
-    <h3>
-        Rostdan ham "{{ post.title }}" postini o‘chirmoqchimisiz?
-    </h3>
+<div class="card danger-box">
+    <div class="eyebrow">Tasdiqlash</div>
+    <h1>Postni o‘chirish</h1>
+    <p>
+        Rostdan ham <strong>“{{ post.title }}”</strong> postini o‘chirmoqchimisiz?
+    </p>
 
     <form method="post">
         {% csrf_token %}
-        <button type="submit">O‘chirish</button>
+        <div class="form-actions">
+            <button class="btn-danger" type="submit">🗑 Ha, o‘chirish</button>
+            <a class="btn btn-secondary" href="{% url 'post_detail' post.pk %}">Bekor qilish</a>
+        </div>
     </form>
-
-    <br>
-
-    <a href="{% url 'post_detail' post.pk %}">
-        Bekor qilish
-    </a>
-
+</div>
 {% endblock %}
