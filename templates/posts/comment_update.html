@@ -1,16 +1,28 @@
-<h3>Commentni tahrirlash</h3>
+{% extends "base.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+
+{% block title %}
+    Commentni tahrirlash
+{% endblock %}
+
+
+{% block content %}
+
+    <h3>Commentni tahrirlash</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <br>
+
+        <button type="submit">Saqlash</button>
+    </form>
 
     <br>
 
-    <button type="submit">Saqlash</button>
-</form>
+    <a href="{% url 'post_detail' comment.post.pk %}">
+        Bekor qilish
+    </a>
 
-<br>
-
-<a href="{% url 'post_detail' comment.post.pk %}">
-    Bekor qilish
-</a>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Blog{% endblock %}</title>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{% url 'post_list' %}">Posts</a>
+
+        {% if request.user.is_authenticated %}
+
+            <br>
+            <div>
+                Salom, {{ request.user.username }}!
+            </div><br>
+
+
+            <a href="{% url 'profile' %}">Profile</a><br>
+            <a href="{% url 'post_create' %}">Post yaratish</a>
+            <br>
+
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a><br>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

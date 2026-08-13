@@ -13,7 +13,7 @@ class PostListView(View):
         posts = Post.objects.annotate(comments_count = Count("comments"))
         if query:
             posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
-        paginator = Paginator(object_list=posts, per_page=1)
+        paginator = Paginator(object_list=posts, per_page=2)
         page_number = request.GET.get("page")
         posts = paginator.get_page(page_number)
         return render(

@@ -1,18 +1,31 @@
-{{ user.username }}<br>
-{{ user.first_name }}<br>
-{{ user.last_name }}<br>
-{{ user.email }}<br>
-{{ user.phone_number }}<br>
-{{ user.address }}<br>
+{% extends "base.html" %}
 
-<br>
 
-<a href="{% url 'profile_update' %}">
-    Ma'lumotlarni o'zgartirish
-</a>
+{% block title %}
+    Profil
+{% endblock %}
 
-<br><br>
 
-<a href="{% url 'password_change' %}">
-    Parolni o‘zgartirish
-</a>
+
+{% block content %}
+
+    {{ user.username }}<br>
+    {{ user.first_name }}<br>
+    {{ user.last_name }}<br>
+    {{ user.email }}<br>
+    {{ user.phone_number }}<br>
+    {{ user.address }}<br>
+
+    <br>
+
+    <a href="{% url 'profile_update' %}">
+        Ma'lumotlarni o'zgartirish
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'password_change' %}">
+        Parolni o‘zgartirish
+    </a>
+
+{% endblock %}

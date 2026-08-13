@@ -1,50 +1,59 @@
+{% extends "base.html" %}
 
-<form method="get">
-    <input type="text" name="q" placeholder="Post qidirish...">
-    <button>Qidirish</button>
-</form>
+{% block title %}
+    Posts
+{% endblock %}
 
-
-{% for post in posts %}
-    <h4>Sarlavha: <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
-    <h4>Yozuvchi: <i>{{ post.author }}</i></h4>
-    <h4>Izoh: {{ post.content }}</h4>
-    <h4>Ko'rishlar soni: {{ post.views_count }} ta</h4>
-    <h4>Commentlar soni: {{ post.comments_count }} ta</h4><br>
-    ======================
-    <br>
-{% endfor %}
+{% block content %}
+        
+    <form method="get">
+        <input type="text" name="q" placeholder="Post qidirish...">
+        <button>Qidirish</button>
+    </form>
 
 
-{% if posts.has_previous %}
-    {% if query %}
-        <a href="?q={{ query }}&page={{ posts.previous_page_number }}">Previous</a>
-    {% else %}
-        <a href="?page={{ posts.previous_page_number }}">Previous</a>
-    {% endif %}
-    
-{% endif %}
+    {% for post in posts %}
+        <h4>Sarlavha: <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h4>
+        <h4>Yozuvchi: <i>{{ post.author }}</i></h4>
+        <h4>Izoh: {{ post.content }}</h4>
+        <h4>Ko'rishlar soni: {{ post.views_count }} ta</h4>
+        <h4>Commentlar soni: {{ post.comments_count }} ta</h4><br>
+        ======================
+        <br>
+    {% endfor %}
 
 
-{% for page_number in posts.paginator.page_range %}
-    {% if page_number == posts.number %}
-        {{ page_number }}
-    {% else %}
+    {% if posts.has_previous %}
         {% if query %}
-            <a href="?q={{ query }}&page={{ page_number }}">{{ page_number }}</a>
+            <a href="?q={{ query }}&page={{ posts.previous_page_number }}">Previous</a>
         {% else %}
-            <a href="?page={{ page_number }}">{{ page_number }}</a>
+            <a href="?page={{ posts.previous_page_number }}">Previous</a>
         {% endif %}
+        
     {% endif %}
 
-{% endfor %}
+
+    {% for page_number in posts.paginator.page_range %}
+        {% if page_number == posts.number %}
+            {{ page_number }}
+        {% else %}
+            {% if query %}
+                <a href="?q={{ query }}&page={{ page_number }}">{{ page_number }}</a>
+            {% else %}
+                <a href="?page={{ page_number }}">{{ page_number }}</a>
+            {% endif %}
+        {% endif %}
+
+    {% endfor %}
 
 
-{% if posts.has_next %}
-    {% if query %}
-        <a href="?q={{ query }}&page={{ posts.next_page_number }}">Next</a>
-    {% else %}
-        <a href="?page={{ posts.next_page_number }}">Next</a>
+    {% if posts.has_next %}
+        {% if query %}
+            <a href="?q={{ query }}&page={{ posts.next_page_number }}">Next</a>
+        {% else %}
+            <a href="?page={{ posts.next_page_number }}">Next</a>
+        {% endif %}
+
     {% endif %}
 
-{% endif %}
+{% endblock %}
